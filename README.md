@@ -37,7 +37,7 @@ docker run -it --rm --name=ldhc -e API_TOKEN="ABCDEF" -e API_URL="https://your.l
 
 Output:
 
-```json
+```
 Fetched 100 bookmarks so far...
 Fetched 200 bookmarks so far...
 [...]
