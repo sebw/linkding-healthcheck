@@ -32,7 +32,7 @@ The code is mimicking a Chrome browser to limit false positive, but many 403 are
 You just need to provide your Linkding API endpoint and token as parameters to the following Docker command:
 
 ```bash
-docker run -it --rm --name=ldhc -e API_TOKEN="ABCDEF" -e API_URL="https://your.linkding.example.com/api/bookmarks ghcr.io/sebw/ldhc:latest" 
+docker run -it --rm --name=ldhc -e API_TOKEN="ABCDEF" -e API_URL="https://your.linkding.example.com/api/bookmarks" ghcr.io/sebw/ldhc:latest
 ```
 
 Output:
