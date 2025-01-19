@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"os"
@@ -45,7 +45,7 @@ func fetchBookmarks(url string, token string) (*APIResponse, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func updateBookmarkTags(bookmarkID int, tags []string, token string, apiBaseURL 
 		return fmt.Errorf("error marshalling JSON: %v", err)
 	}
 
-	req, err := http.NewRequest("PATCH", url, ioutil.NopCloser(bytes.NewReader(payloadBytes)))
+	req, err := http.NewRequest("PATCH", url, bytes.NewReader(payloadBytes))
 	if err != nil {
 		return fmt.Errorf("error creating request: %v", err)
 	}
@@ -90,7 +90,7 @@ func updateBookmarkTags(bookmarkID int, tags []string, token string, apiBaseURL 
 
 	// Check for a non-200 status code and handle accordingly
 	if resp.StatusCode != 200 {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("failed to update bookmark with status: %d. Response body: %s", resp.StatusCode, string(body))
 	}
 
