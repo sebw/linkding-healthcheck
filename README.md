@@ -22,7 +22,10 @@ In case of DNS issue `@HEALTH_DNS` is assigned and for other cases (TLS, etc.) `
 
 Tags are prefixed with `@` so they are at the top of the list.
 
-In between two runs, if a site comes back to life, the old health tag is removed. If the error changes (from 403 to 404), the tag is replaced accordingly.
+In between two runs:
+
+- if a site comes back to life, the old health tag(s) is/are removed
+- if the error changes (from 403 to 404 for example), both tags are kept, so you see the different errors the site has been dealing with since it went dead
 
 The code is mimicking a Chrome browser to limit false positive, but many 403 are not actual errors.
 

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+    "strings"
 )
 
 // single bookmark structure
@@ -172,6 +173,23 @@ func main() {
 		if valid {
 			// link is OK
 			fmt.Printf("Bookmark %d ✅ %s\n", bookmark.ID, bookmark.URL)
+
+            // Remove any tags starting with @HEALTH_
+            tags := bookmark.TagNames
+            updatedTags := []string{}
+            for _, t := range tags {
+                if !strings.HasPrefix(t, "@HEALTH_") {
+                    updatedTags = append(updatedTags, t)
+                }
+            }
+
+            // Update the bookmark's tags if any were removed
+            if len(updatedTags) != len(tags) {
+                err := updateBookmarkTags(bookmark.ID, updatedTags, token, apiBaseURL)
+                if err != nil {
+                    fmt.Printf("Error updating bookmark %d: %v\n", bookmark.ID, err)
+                }
+            }
 		} else {
 			// link is not OK
 			fmt.Printf("Bookmark %d ❌ %s %s\n", bookmark.ID, errorType, bookmark.URL)
@@ -187,6 +205,7 @@ func main() {
 			}
 
 			// Add the error tag if it's not already in the tags
+			// We are not removing previous error tags if the URL goes from 500 to 404. We only clean up the error tags if the link becomes valid again
 			tags := bookmark.TagNames
 			tagExists := false
 			for _, t := range tags {
