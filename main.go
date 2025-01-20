@@ -166,8 +166,14 @@ func main() {
 
 	fmt.Printf("Total bookmarks fetched: %d\n", len(allBookmarks))
 
+	// Map to track duplicate URLs
+	seenURLs := make(map[string][]int) // Map URL to a list of bookmark IDs
+
 	// Validate and update all bookmarks
 	for _, bookmark := range allBookmarks {
+		urlLower := strings.ToLower(bookmark.URL) // Normalize case for comparison
+		seenURLs[urlLower] = append(seenURLs[urlLower], bookmark.ID)
+
 		valid, errorType := checkURLValidity(bookmark.URL)
 
 		if valid {
@@ -223,6 +229,13 @@ func main() {
 			if err != nil {
 				fmt.Printf("Error updating bookmark %d: %v\n", bookmark.ID, err)
 			}
+		}
+	}
+	// Report duplicates
+	fmt.Println("\nDuplicate Links:")
+	for url, ids := range seenURLs {
+		if len(ids) > 1 {
+			fmt.Printf("URL: %s - Duplicate in bookmarks: %v\n", url, ids)
 		}
 	}
 }
