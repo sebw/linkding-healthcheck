@@ -100,9 +100,22 @@ func updateBookmarkTags(bookmarkID int, tags []string, token string, apiBaseURL 
 
 // checkURLValidity checks if a URL is valid with HEAD request and returns the validity and HTTP status code.
 func checkURLValidity(url string) (bool, string) {
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 10 * time.Second, // Timeout for the HTTP request
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			if len(via) >= 10 { // Limit to 10 redirects
+				return fmt.Errorf("stopped after 3 redirects")
+			}
+			return nil
+		},
+    }
+
 	req, err := http.NewRequest("HEAD", url, nil)
 	if err != nil {
+		// Handle specific redirect loop or timeout errors
+		if strings.Contains(err.Error(), "stopped after 3 redirects") {
+			return false, "redirect_loop"
+		}
 		// Check if the error is related to DNS resolution
 		if _, ok := err.(*net.DNSError); ok {
 			// Return DNS error
