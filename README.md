@@ -1,4 +1,4 @@
-# LDHC: Linkding Health Check
+# LDHC: Linkding Health Check and Duplicate Finder
 
 [Linkding](https://github.com/sissbruecker/linkding/) is an amazing bookmark manager!
 
@@ -15,6 +15,8 @@ The internet comes and goes and it can be a good thing to know if a page went 40
 This request https://github.com/sissbruecker/linkding/issues/68 from 2021 is exactly asking for that but I understand the challenges in implementing something like that. I also like the lightweight approach of Linkding and appreciate it doesn't become a bloated piece of software.
 
 This is why I decided to implement a quick and dirty URL health checker outside of Linkding and take advantage of the tag systems.
+
+This app also checks if your Linkding contains exact duplicates, this can happen at import time because Linkding doesn't check duplicates. This topic is discussed [here](https://github.com/sissbruecker/linkding/issues/751).
 
 You just need to run the following Docker image on a regular basis and a tag `@HEALTH_HTTP_<code>` will be assigned in case the link is no longer valid.
 
@@ -51,4 +53,6 @@ Total bookmarks fetched: 5359
 Bookmark 5417 ✅ https://www.example.com/blog/2024-02-18
 Bookmark 5395 ❌ HTTP_403 https://www.example.com/de-en/listing/123/blah
 [...]
+Duplicate Links:
+URL: https://blah.example.com/ - Duplicate in bookmarks: [6 5]
 ```
